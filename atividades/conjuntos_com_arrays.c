@@ -22,6 +22,27 @@ int check_element(int vet[], int tam, int element){
 
 //
 
+void vets_union(int vetA[], int vetB[], int tam){
+    int pointA = 0;
+    int pointB = 0;
+    int pointC = 0;
+    int elem_rept = 0;
+
+    while(pointA < tam || pointB < tam){
+        if(pointA < pointB){
+            pointA++;
+        } else if (pointA > pointB) {
+            pointB++;
+        } else{
+            elem_rept++;
+        }
+    }
+
+    for(; pointA<tam; pointA++){ elem_rept++; }
+    for(; pointB<tam; pointB++){ elem_rept++; }
+    printf("%d", tam*2 - elem_rept);
+}
+
 int main(){
 
     // pegar o tamanho do vetor
@@ -44,7 +65,7 @@ int main(){
     }
 
     // unindo vetores
-    vet_union(vets[0], vets[1], tam);
+    vets_union(vets[0], vets[1], tam);
     printf("\n\n");
 
     // printando vetores
