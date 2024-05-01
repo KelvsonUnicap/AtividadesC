@@ -33,6 +33,6 @@ int main(){
     criptografia(string, criptografada);
 
     printf("%s", criptografada);
-
+    printf("oi");
     return 0;
 }
