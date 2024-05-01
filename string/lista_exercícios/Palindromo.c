@@ -1,49 +1,43 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
-#define MAX 60
 
-void display(char frase[]){
-    for(int i = 0 ; i < strlen(frase); i ++){
-        printf("%c", frase[i]);
-    }
-}
-
-int len(char text[]){
-    int tamanho_sem_espaco = 0;
-    for(int i = 0; i<strlen(text); i++){
-        if(text[i] == ' '){
-            continue;
+void removerEspacos(char *entrada, char *saida) {
+    int j = 0;
+    for (int i = 0; entrada[i] != '\0'; i++) {
+        if (entrada[i] != ' ') {
+            saida[j++] = tolower(entrada[i]);
         }
-        tamanho_sem_espaco++;
     }
-    
-    return tamanho_sem_espaco;
+    saida[j] = '\0';
 }
 
-int check_palindromo(char frase[]){
-    int tamanho_sem_espacos = len(frase);
-    char primitiva_sem_espaco[tamanho_sem_espacos], copia[tamanho_sem_espacos];
-
-    for(int i = 0 , j= 0; i < strlen(frase); i++){
-        if(frase[i] == ' '){ continue; }
-        primitiva_sem_espaco[j] = frase[i];
-        j++;
+int checarPalindromo(char *str) {
+    int len = strlen(str);
+    for (int i = 0; i < len / 2; i++) {
+        if (str[i] != str[len - 1 - i]) {
+            return 0;
+        }
     }
-
-    for(int i = 0, j=0; i<=tamanho_sem_espacos; i++){
-        copia[j] = primitiva_sem_espaco[tamanho_sem_espacos - i];
-        j++;
-    }
-
-    display(primitiva_sem_espaco);
+    return 1;
 }
 
-void main(){
+int main() {
+    char frase[100];
+    char fraseSemEspacos[100];
 
-    char frase[MAX];
+    printf("Digite uma frase: ");
+    fgets(frase, sizeof(frase), stdin);
+    frase[strcspn(frase, "\n")] = '\0';
 
-    fgets(frase, 59, stdin);
+    removerEspacos(frase, fraseSemEspacos);
+    int resultado = checarPalindromo(fraseSemEspacos);
 
-    check_palindromo(frase);
+    if(resultado){
+        printf("É palindromo");
+    } else{
+        printf("Não é palindromo");
+    }
+
+    return 0;
 }
