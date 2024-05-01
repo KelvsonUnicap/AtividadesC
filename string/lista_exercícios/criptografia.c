@@ -11,13 +11,16 @@ Exemplo: Entrada: Eu estou na escola Saída: ** *st** n* *sc*l*
 #define MAX 80
 
 void criptografia(char *string, char *criptografada){
-    int j = 0, id = 0;
-    for(int i = 0; string[i] != '\0'; i++){
-        if(string[i] == 'a' || string[i] == 'e' || string[i] == 'i' || string[i] == 'o' || string[i] == 'u'){
-            criptografada[j++] = '*';
-        } else criptografada[j++] = string[i];
-    }
-    criptografada[j] = '\0';
+    char buffer[strlen(string)];
+    strcpy(buffer, string);
+    int i = strcspn(buffer, "aeiouAEIOU");
+    if(i < strlen(buffer)){
+        while(i < strlen(buffer)){
+            buffer[i] = '*';
+            i = strcspn(buffer, "aeiouAEIOU");
+        }
+        strcpy(criptografada, buffer);
+    } else strcpy(criptografada, string);
 }
 
 int main(){
