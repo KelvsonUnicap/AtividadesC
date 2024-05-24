@@ -29,10 +29,9 @@
 #include <string.h>
 
 #define LOCAIS 26
-#define ESTADO_LETRAS 30
 
 struct Estatisticas{
-    char estado[ESTADO_LETRAS];
+    char estado[2];
     int veiculos;
     int sinistros;
 };
@@ -40,9 +39,8 @@ struct Estatisticas{
 void Coletar_dados(struct Estatisticas dados[], int amostras){
     for(int i = 0; i < amostras; i++){
 
-        while(getchar() != '\n');
         printf("Estado: ");
-        fgets(dados[i].estado, ESTADO_LETRAS, stdin);
+        fgets(dados[i].estado, 3, stdin);
         dados[i].estado[strlen(dados[i].estado) - 1] = '\0';
         
         printf("Numero de veiculos: ");
@@ -50,56 +48,62 @@ void Coletar_dados(struct Estatisticas dados[], int amostras){
 
         printf("Numero de sinistros: ");
         scanf("%d", &dados[i].sinistros);
+        while(getchar() != '\n');
     }
 }
 
-int Maior(struct Estatisticas dados[], int amostras){
-    int maior = 0;
-    int indexMaior = 0;
-    for(int i = 0; i<amostras; i++){
-        if(dados[i].sinistros > maior){
-            maior = dados[i].sinistros;
-            indexMaior = i;
+void Maior_e_menor(struct Estatisticas dados[], int amostras, int *indexMaior, int *indexMenor){
+    *indexMaior = 0;
+    *indexMenor = 0;
+    for(int i = 1; i<amostras; i++){
+        if(dados[i].sinistros > dados[*indexMaior].sinistros){
+            *indexMaior = i;
+        }
+        else if (dados[i].sinistros < dados[*indexMenor].sinistros){
+            *indexMenor = i;
         }
     }
-
-    return indexMaior;
-}
-
-int Menor(struct Estatisticas dados[], int amostras, int maior){
-    int menor = maior;
-    int indexMenor = 0;
-    for(int i = 0; i<amostras; i++){
-        if(dados[i].sinistros < menor) {
-            menor = dados[i].sinistros;
-            indexMenor = i;
-        }
-    }
-
-    return indexMenor;
 }
 
 void percentual(struct Estatisticas dados[], int amostras){
     for(int i = 0; i<amostras;i++){
-        printf("A porcentagem de acidentes do estado %s é: %.2f\n", dados[i].estado, ((dados[i].veiculos)*1.0/(dados[i].sinistros)));
+        printf("A porcentagem de acidentes do estado %s é: %.2f\n", dados[i].estado, ((dados[i].sinistros)*1.0/(dados[i].veiculos)));
     }
 }
+
+void acimaMedia(struct Estatisticas dados[], int amostras){
+    double mediaGeral = 0;
+    for(int i = 0; i<amostras; i++){
+        mediaGeral += (dados[i].sinistros*0.1/dados[i].veiculos);
+    }
+
+    for(int j = 0; j<amostras; j++){
+        if((dados[j].sinistros*0.1/dados[j].veiculos) > mediaGeral){
+            printf("%s está acima da média geral de acidentes.\n", dados[j].estado);
+        }
+    }
+}
+
 int main(){
     struct Estatisticas dados[LOCAIS];
     
-    int estados, estadoMaior, estadoMenor;
+    int estados;
+    int estadoMaior, estadoMenor;
 
     printf("Estados analisados: ");
     scanf("%d", &estados);
+    while(getchar() != '\n');
 
     Coletar_dados(dados, estados);
     
-    estadoMaior = Maior(dados, estados);
-    estadoMenor = Menor(dados, estados, dados[estadoMaior].sinistros);
+    Maior_e_menor(dados, estados, &estadoMaior, &estadoMenor);
     
     printf("O estado com maior quantidade de sinistros é o: %s - com %d veiculos e %d sinistros\n", dados[estadoMaior].estado, dados[estadoMaior].veiculos, dados[estadoMaior].sinistros);
     printf("O estado com menor quantidade de sinistros é o: %s - com %d veiculos e %d sinistros\n", dados[estadoMenor].estado, dados[estadoMenor].veiculos, dados[estadoMenor].sinistros);
 
     percentual(dados, estados);
+
+    acimaMedia(dados, estados);
+
     return 0;
 }
